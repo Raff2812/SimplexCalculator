@@ -1,0 +1,9 @@
+[project]
+name = "simplexcalculator"
+version = "0.1.0"
+description = "Add your description here"
+requires-python = ">=3.14"
+dependencies = [
+    "numpy>=2.4.2",
+    "rich>=14.3.3",
+]
