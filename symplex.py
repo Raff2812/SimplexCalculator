@@ -4,6 +4,7 @@ Implementazione del metodo del simplesso a due fasi con aritmetica esatta (frazi
 """
 
 import numpy as np
+import sympy as sp
 from fractions import Fraction
 from rich.console import Console
 from rich.table import Table
@@ -47,41 +48,11 @@ class LinearAlgebra:
 
     @staticmethod
     def invert_matrix(matrix: np.ndarray) -> np.ndarray | None:
-        """
-        Calcola l'inversa di una matrice quadrata tramite eliminazione di Gauss-Jordan.
-
-        Returns:
-            La matrice inversa, oppure None se la matrice è singolare.
-        """
-        n = matrix.shape[0]
-        if n == 0 or matrix.shape[0] != matrix.shape[1]:
+        sym_matrix = sp.Matrix(matrix.tolist())
+        if sym_matrix.det() == 0:
             return None
-
-        identity = np.array(
-            [[Fraction(1) if i == j else Fraction(0) for j in range(n)] for i in range(n)],
-            dtype=object,
-        )
-        augmented = np.concatenate((matrix, identity), axis=1)
-
-        for col in range(n):
-            pivot_row = col
-            while pivot_row < n and augmented[pivot_row, col] == 0:
-                pivot_row += 1
-            if pivot_row == n:
-                return None
-
-            augmented[[col, pivot_row]] = augmented[[pivot_row, col]]
-            pivot_val = augmented[col, col]
-            if pivot_val == 0:
-                return None
-
-            augmented[col, :] /= pivot_val
-            for row in range(n):
-                if row != col:
-                    augmented[row, :] -= augmented[row, col] * augmented[col, :]
-
-        return augmented[:, n:]
-
+        inv = sym_matrix.inv()
+        return np.array(inv.tolist(), dtype=object)
 
 # ---------------------------------------------------------------------------
 # Struttura dati del problema
